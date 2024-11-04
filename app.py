@@ -20,7 +20,7 @@ def main():
         for journal in JOURNALS:
             for page in range(1, N_PAGES + 1):
                 param = CnkiRequest(Originate=journal, Page=page)
-                res = asyncio.run(fetch(CNKI_SEARCH, param.model_dump()))
+                res = fetch(CNKI_SEARCH, param.model_dump())
                 df = pd.DataFrame.from_dict([p.model_dump() for p in res.articleList])
                 dfs.append(df)
         data = pd.concat(dfs)

@@ -44,7 +44,10 @@ class CnkiResponse(BaseModel):
     totalPageCount: int
 
 
-async def fetch(url, param):
-    response = requests.post(url, param).json()
+def fetch(url, param):
+    try:
+        response = requests.post(url, param).json()
+    except requests.exceptions.JSONDecodeError:
+        response = fetch(url, param)
     res = CnkiResponse.model_validate(response)
     return res
