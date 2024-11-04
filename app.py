@@ -1,5 +1,3 @@
-import asyncio
-
 import pandas as pd
 
 from liiaa.cnki import CnkiRequest, fetch
@@ -14,7 +12,7 @@ def main():
     # fetch articles of journals related to lighting from cnki,
     # store useful information to a csv file for further analysis
     try:
-        data = pd.read_csv('articles.csv')
+        data = pd.read_csv("articles.csv")
     except FileNotFoundError:
         dfs = []
         for journal in JOURNALS:
@@ -24,7 +22,7 @@ def main():
                 df = pd.DataFrame.from_dict([p.model_dump() for p in res.articleList])
                 dfs.append(df)
         data = pd.concat(dfs)
-        data.to_csv('articles.csv')
+        data.to_csv("articles.csv")
 
     # count the frequencies of articles keyword and draw a wordcloud
     kws = data["keyWord"]
