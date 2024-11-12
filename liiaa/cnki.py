@@ -29,11 +29,9 @@ class CnkiRequest(BaseModel):
 class Article(BaseModel):
     title: str
     summary: str
-    author: str
-    originate: str
     publishTime: str
-    downloadCount: str
-    quoteCount: str
+    downloadCount: int
+    quoteCount: int
     keyWord: str | None
 
 
@@ -50,4 +48,16 @@ def fetch(url, param):
     except requests.exceptions.JSONDecodeError:
         response = fetch(url, param)
     res = CnkiResponse.model_validate(response)
+    return res
+
+
+def filter(articles):
+    """filter those results that are not technical articles"""
+    res = []
+    for e in articles:
+        p = e.model_dump()
+        kw, dc = p["keyWord"], p["downloadCount"]
+        if len(kw.split(";")) < 3 or dc == 0:
+            continue
+        res.append(p)
     return res

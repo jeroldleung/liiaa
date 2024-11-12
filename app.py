@@ -1,6 +1,6 @@
 import pandas as pd
 
-from liiaa.cnki import CnkiRequest, fetch
+from liiaa.cnki import CnkiRequest, fetch, filter
 from liiaa.wordcloud import KeywordCloud
 
 CNKI_SEARCH = "https://search.cnki.com.cn/api/search/listresult"
@@ -18,8 +18,9 @@ def main():
         for journal in JOURNALS:
             for page in range(1, N_PAGES + 1):
                 param = CnkiRequest(Originate=journal, Page=page)
-                res = fetch(CNKI_SEARCH, param.model_dump())
-                df = pd.DataFrame.from_dict([p.model_dump() for p in res.articleList])
+                xres = fetch(CNKI_SEARCH, param.model_dump())
+                res = filter(xres.articleList)
+                df = pd.DataFrame.from_dict(res)
                 dfs.append(df)
         data = pd.concat(dfs)
         data.to_csv("articles.csv")
