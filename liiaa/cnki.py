@@ -1,3 +1,4 @@
+import datetime
 from enum import Enum
 from typing import List
 
@@ -22,8 +23,8 @@ class CnkiRequest(BaseModel):
     Page: int | None = 1
     ArticleType: int | None = 0
     Originate: str | None = None
-    PublishTimeBegin: str | None = None
-    PublishTimeEnd: str | None = None
+    PublishTimeBegin: str = str(datetime.datetime.now().year - 1) + "年"
+    PublishTimeEnd: str = "不 限"
 
 
 class Article(BaseModel):
@@ -41,33 +42,53 @@ class CnkiResponse(BaseModel):
     totalPageCount: int
 
 
-def fetch(url, param):
-    try:
-        response = requests.post(url, param).json()
-    except requests.exceptions.JSONDecodeError:
-        response = fetch(url, param)
-    res = CnkiResponse.model_validate(response)
-    return res
+class CnkiService:
+    def __init__(self, originate):
+        self.url = "https://search.cnki.com.cn/api/search/listresult"
+        self.request_data = CnkiRequest(Originate=originate).model_dump()
 
+    def fetch(self):
+        try:
+            response = requests.post(self.url, self.request_data).json()
+        except requests.exceptions.JSONDecodeError:
+            response = self.fetch()
+        res = CnkiResponse.model_validate(response)
+        return res
 
-def filter(articles):
-    """filter articles and clean the data"""
-    res = []
-    for e in articles:
-        p = e.model_dump()
-        kw, dc = p["keyWord"], p["downloadCount"]
+    def filter(self, articles):
+        """filter articles and clean the data"""
+        res = []
+        for e in articles:
+            p = e.model_dump()
+            kw, dc = p["keyWord"], p["downloadCount"]
 
-        # drop the informal articles
-        if len(kw.split(";")) < 3 or dc == 0:
-            continue
-
-        # turn the string of keyword to a list
-        nkw = []
-        for w in kw.split(";"):
-            if w == "":
+            # drop the informal articles
+            if len(kw.split(";")) < 3 or dc == 0:
                 continue
-            nkw.append(w)
 
-        p["keyWord"] = nkw
-        res.append(p)
-    return res
+            # turn the string of keyword to a list
+            nkw = []
+            for w in kw.split(";"):
+                if w == "":
+                    continue
+                nkw.append(w)
+
+            p["keyWord"] = nkw
+            res.append(p)
+        return res
+
+    def get(self):
+        data = []
+        # fetch for the first time,
+        # add the result to the data,
+        # and get the total page size
+        response = self.fetch()
+        data += self.filter(response.articleList)
+        pz = response.totalPageCount
+
+        # loop over the page and add the result
+        for i in range(2, pz):
+            self.request_data["Page"] = i
+            response = self.fetch()
+            data += self.filter(response.articleList)
+        return data

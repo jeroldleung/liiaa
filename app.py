@@ -1,11 +1,7 @@
 import json
 
-from liiaa.cnki import CnkiRequest, fetch, filter
+from liiaa.cnki import CnkiService
 from liiaa.wordcloud import KeywordCloud
-
-CNKI_SEARCH = "https://search.cnki.com.cn/api/search/listresult"
-JOURNALS = ["China Light & Lighting", "China Illuminating Engineering Journal"]
-N_PAGES = 20
 
 
 def main():
@@ -17,15 +13,13 @@ def main():
             for line in file:
                 data.append(json.loads(line))
     except FileNotFoundError:
+        cll = CnkiService(originate="中国照明电器")
+        ciej = CnkiService(originate="照明工程学报")
+        data += cll.get()
+        data += ciej.get()
         with open("./data/articles.jsonl", "w") as file:
-            for journal in JOURNALS:
-                for page in range(1, N_PAGES + 1):
-                    param = CnkiRequest(Originate=journal, Page=page)
-                    xres = fetch(CNKI_SEARCH, param.model_dump())
-                    res = filter(xres.articleList)
-                    for l in res:
-                        file.write(json.dumps(l, ensure_ascii=False) + "\n")
-                    data += res
+            for e in data:
+                file.write(json.dumps(e, ensure_ascii=False) + "\n")
 
     # count the frequencies of articles keyword and draw a wordcloud
     kws = [e["keyWord"] for e in data]
