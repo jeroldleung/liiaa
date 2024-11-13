@@ -28,7 +28,6 @@ class CnkiRequest(BaseModel):
 
 class Article(BaseModel):
     title: str
-    summary: str
     publishTime: str
     downloadCount: int
     quoteCount: int
