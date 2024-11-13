@@ -13,11 +13,11 @@ def main():
     # store the information to a jsonl file for further analysis
     data = []
     try:
-        with open("articles.jsonl", "r") as file:
+        with open("./data/articles.jsonl", "r") as file:
             for line in file:
                 data.append(json.loads(line))
     except FileNotFoundError:
-        with open("articles.jsonl", "w") as file:
+        with open("./data/articles.jsonl", "w") as file:
             for journal in JOURNALS:
                 for page in range(1, N_PAGES + 1):
                     param = CnkiRequest(Originate=journal, Page=page)
