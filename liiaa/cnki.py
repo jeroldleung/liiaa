@@ -51,12 +51,23 @@ def fetch(url, param):
 
 
 def filter(articles):
-    """filter those results that are not technical articles"""
+    """filter articles and clean the data"""
     res = []
     for e in articles:
         p = e.model_dump()
         kw, dc = p["keyWord"], p["downloadCount"]
+
+        # drop the informal articles
         if len(kw.split(";")) < 3 or dc == 0:
             continue
+
+        # turn the string of keyword to a list
+        nkw = []
+        for w in kw.split(";"):
+            if w == "":
+                continue
+            nkw.append(w)
+
+        p["keyWord"] = nkw
         res.append(p)
     return res
