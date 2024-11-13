@@ -8,13 +8,11 @@ class KeywordCloud:
             font_path=font_path, background_color="white", width=width, height=height
         )
 
-    def generate(self, text):
+    def generate(self, keywords):
         """counting frequencies of each word in a list of string"""
         frq = {}
-        for s in text:
-            if type(s) is not str:
-                continue
-            for w in s.split(";"):
+        for kws in keywords:
+            for w in kws:
                 frq[w] = frq.get(w, 0) + 1
         self.wc.generate_from_frequencies(frq)
 
