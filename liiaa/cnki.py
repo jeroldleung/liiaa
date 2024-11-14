@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from enum import Enum
 from typing import List
 
@@ -23,7 +23,7 @@ class CnkiRequest(BaseModel):
     Page: int | None = 1
     ArticleType: int | None = 0
     Originate: str | None = None
-    PublishTimeBegin: str = str(datetime.datetime.now().year - 1) + "年"
+    PublishTimeBegin: str = str(datetime.now().year - 1) + "年"
     PublishTimeEnd: str = "不 限"
 
 
