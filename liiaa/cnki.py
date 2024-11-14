@@ -56,7 +56,6 @@ class CnkiService:
         return res
 
     def filter(self, articles):
-        """filter articles and clean the data"""
         res = []
         for e in articles:
             p = e.model_dump()
