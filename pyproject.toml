@@ -1,0 +1,22 @@
+[project]
+name = "liiaa"
+version = "0.1.0"
+description = "Lighting Industry Integration Analysis Assistant"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "fastapi[standard]>=0.115.6",
+    "pydantic>=2.10.3",
+    "langchain-core>=0.3.22",
+    "langchain-ollama>=0.2.1",
+    "langchain-community>=0.3.10",
+    "dashscope>=1.20.14",
+]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "I", # isort
+]
