@@ -21,7 +21,7 @@ async def list_all_available_actions():
     return list(actions.keys())
 
 
-@router.post("/")
+@router.post("/create")
 async def create_a_task(r: TaskRequest, bg_task: BackgroundTasks):
     task_id = uuid.uuid4()
     bg_task.add_task(actions[r.action], task_id, tasks_state, r.input)
