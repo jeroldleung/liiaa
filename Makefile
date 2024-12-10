@@ -1,7 +1,7 @@
 .PHONY: dev format
 
 dev:
-		@uv run fastapi dev
+		@uvicorn app.main:app --reload
 
 format:
 		@uvx ruff format .
