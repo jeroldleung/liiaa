@@ -6,6 +6,7 @@ from pydantic import BaseModel
 
 class TaskRequest(BaseModel):
     action: str
+    ollama_llm: str = "qwen2.5:3b"
     input: List[str]
 
 

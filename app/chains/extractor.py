@@ -8,8 +8,8 @@ from app.schemas.product import Product
 from app.schemas.task import TaskResults
 
 
-async def extract_attribute(task_id: uuid.UUID, tasks_state: dict, input: List[str]):
-    llm = ChatOllama(model="qwen2.5:3b", temperature=0)
+async def extract_attribute(task_id: uuid.UUID, tasks_state: dict, ollama_llm: str, input: List[str]):
+    llm = ChatOllama(model=ollama_llm, temperature=0)
     sys_prompt = SystemMessagePromptTemplate.from_template("You are an expert extraction algorithm.")
     user_prompt = HumanMessagePromptTemplate.from_template(
         "Extract the product attribute from the following sku: {sku}"
