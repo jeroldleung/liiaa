@@ -1,15 +1,23 @@
+import os
 import uuid
 from typing import List
 
+from dotenv import load_dotenv
 from langchain_core.prompts import ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate
-from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
 
 from app.schemas.product import Product
 from app.schemas.task import TaskResults
 
 
-async def extract_attribute(task_id: uuid.UUID, tasks_state: dict, ollama_llm: str, input: List[str]):
-    llm = ChatOllama(model=ollama_llm, temperature=0)
+async def extract_attribute(task_id: uuid.UUID, tasks_state: dict, input: List[str]):
+    load_dotenv()
+    llm = ChatOpenAI(
+        model="qwen-turbo",
+        temperature=0,
+        base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
+        api_key=os.getenv("DASHSCOPE_API_KEY"),
+    )
     sys_prompt = SystemMessagePromptTemplate.from_template("You are an expert extraction algorithm.")
     user_prompt = HumanMessagePromptTemplate.from_template(
         "Extract the product attribute from the following sku: {sku}"
