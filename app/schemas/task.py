@@ -15,4 +15,5 @@ class TaskResponse(BaseModel):
 
 
 class TaskResults(TaskResponse):
-    value: List[Any]
+    description: str
+    data: List[Any]

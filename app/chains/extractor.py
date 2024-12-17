@@ -3,6 +3,7 @@ import uuid
 from typing import List
 
 from dotenv import load_dotenv
+from fastapi import HTTPException
 from langchain_core.prompts import ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate
 from langchain_openai import ChatOpenAI
 
@@ -11,7 +12,18 @@ from app.schemas.task import TaskResults
 
 
 async def extract_attribute(task_id: uuid.UUID, tasks_state: dict, input: List[str]):
-    load_dotenv()
+    if not load_dotenv():
+        tasks_state[task_id] = TaskResults(id=task_id, completed=False, description="Cannot load .env file", data=[])
+        return
+
+    api_key = os.getenv("DASHSCOPE_API_KEY")
+
+    if api_key == None:
+        tasks_state[task_id] = TaskResults(
+            id=task_id, completed=False, description="DASHSCOPE_API_KEY does not exist in the .env file", data=[]
+        )
+        return
+
     llm = ChatOpenAI(
         model="qwen-turbo",
         temperature=0,
@@ -28,4 +40,6 @@ async def extract_attribute(task_id: uuid.UUID, tasks_state: dict, input: List[s
     for sku in input:
         res = extractor.invoke(sku)
         val.append(res)
-    tasks_state[task_id] = TaskResults(id=task_id, completed=True, value=val)
+    tasks_state[task_id] = TaskResults(
+        id=task_id, completed=True, description="Extraction task complete successfully", data=val
+    )
