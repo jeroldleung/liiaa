@@ -1,5 +1,5 @@
 import uuid
-from typing import Any, List
+from typing import Any, List, Optional
 
 from pydantic import BaseModel
 
@@ -16,4 +16,4 @@ class TaskResponse(BaseModel):
 
 class TaskResults(TaskResponse):
     description: str
-    data: List[Any]
+    data: Optional[List[Any]]
