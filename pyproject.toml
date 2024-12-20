@@ -10,7 +10,7 @@ dependencies = [
     "uvicorn>=0.32.1",
     "langchain-core>=0.3.25",
     "langchain-openai>=0.2.12",
-    "python-dotenv>=1.0.1",
+    "pydantic-settings>=2.7.0",
 ]
 
 [tool.ruff]

@@ -1,8 +1,6 @@
-import os
 import uuid
 from typing import List
 
-from dotenv import load_dotenv
 from langchain_core.prompts import (
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
@@ -14,32 +12,14 @@ from app.schemas.product import Product
 from app.schemas.task import TaskResults
 
 
-async def extract_attribute(task_id: uuid.UUID, tasks_state: dict, input: List[str]):
-    if not load_dotenv():
-        tasks_state[task_id] = TaskResults(
-            id=task_id,
-            completed=False,
-            description="could not load .env file",
-            data=None,
-        )
-        return
-
-    api_key = os.getenv("DASHSCOPE_API_KEY")
-
-    if api_key == None:
-        tasks_state[task_id] = TaskResults(
-            id=task_id,
-            completed=False,
-            description="DASHSCOPE_API_KEY does not exist in the .env file",
-            data=None,
-        )
-        return
-
+async def extract_attribute(
+    task_id: uuid.UUID, tasks_state: dict, input: List[str], api_key: str
+):
     llm = ChatOpenAI(
         model="qwen-turbo",
         temperature=0,
         base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-        api_key=os.getenv("DASHSCOPE_API_KEY"),
+        api_key=api_key,
     )
     sys_prompt = SystemMessagePromptTemplate.from_template(
         "You are an expert extraction algorithm."
