@@ -1,0 +1,1 @@
+from .product_attributes import ProductAttributes

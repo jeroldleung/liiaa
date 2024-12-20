@@ -1,8 +1,8 @@
 from pydantic import BaseModel, Field
 
 
-class Product(BaseModel):
-    name: str = Field(description="Product name in Chinese")
+class ProductAttributes(BaseModel):
+    name: str = Field(description="Product name")
     serial_number: str = Field(description="Product serial number")
     wattage: str = Field(description="Product wattage")
     size: str = Field(description="Product size")

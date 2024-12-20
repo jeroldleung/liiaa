@@ -1,7 +1,7 @@
 .PHONY: dev format
 
 dev:
-		@uvicorn app.main:app --reload
+		@uvicorn app:app --reload
 
 format:
 		@uvx ruff format .
