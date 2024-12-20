@@ -9,11 +9,11 @@ from langchain_core.prompts import (
 from langchain_openai import ChatOpenAI
 
 from app.schemas.product import Product
-from app.schemas.task import TaskResults
+from app.schemas.run import RunResult
 
 
 async def extract_attribute(
-    task_id: uuid.UUID, tasks_state: dict, input: List[str], api_key: str
+    run_id: uuid.UUID, runs_state: dict, input: List[str], api_key: str
 ):
     llm = ChatOpenAI(
         model="qwen-turbo",
@@ -35,9 +35,9 @@ async def extract_attribute(
         res = extractor.invoke(sku)
         val.append(res)
 
-    tasks_state[task_id] = TaskResults(
-        id=task_id,
+    runs_state[run_id] = RunResult(
+        id=run_id,
         completed=True,
-        description="Extraction task complete successfully",
+        description="Extraction complete successfully",
         data=val,
     )

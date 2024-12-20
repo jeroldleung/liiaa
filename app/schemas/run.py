@@ -4,16 +4,15 @@ from typing import Any, List, Optional
 from pydantic import BaseModel
 
 
-class TaskRequest(BaseModel):
-    action: str
+class RunRequest(BaseModel):
     input: List[str]
 
 
-class TaskResponse(BaseModel):
+class RunResponse(BaseModel):
     id: uuid.UUID
     completed: bool
 
 
-class TaskResults(TaskResponse):
+class RunResult(RunResponse):
     description: str
     data: Optional[List[Any]]
