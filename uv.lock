@@ -1,6 +1,6 @@
 version = 1
 requires-python = ">=3.10"
-environment-markers = [
+resolution-markers = [
     "python_full_version < '3.12.4'",
     "python_full_version >= '3.12.4'",
 ]
@@ -337,7 +337,7 @@ wheels = [
 [[package]]
 name = "liiaa"
 version = "0.1.0"
-source = { editable = "." }
+source = { virtual = "." }
 dependencies = [
     { name = "fastapi" },
     { name = "langchain-core" },
@@ -353,7 +353,7 @@ requires-dist = [
     { name = "langchain-core", specifier = ">=0.3.25" },
     { name = "langchain-openai", specifier = ">=0.2.12" },
     { name = "pydantic", specifier = ">=2.10.3" },
-    { name = "python-dotenv" },
+    { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "uvicorn", specifier = ">=0.32.1" },
 ]
 
