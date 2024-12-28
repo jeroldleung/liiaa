@@ -6,11 +6,11 @@ from fastapi import FastAPI
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 
-from schemas import ProductAttributes
+from app.schemas import ProductAttributes
 
 prompt_templates = {}
 
-PROMPTS_DIR_PATH = "./prompts"
+PROMPTS_DIR_PATH = "app/prompts"
 
 
 @asynccontextmanager
@@ -39,7 +39,7 @@ app = FastAPI(
 )
 
 
-@app.get("/extract_attributes")
+@app.get("/attributes")
 async def extract_attributes(sku: str):
     llm = ChatOpenAI(
         model="qwen-turbo",
