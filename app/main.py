@@ -2,10 +2,11 @@ import os
 from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
 
+from app.dependencies import get_api_key
 from app.schemas import ProductAttributes
 
 prompt_templates = {}
@@ -40,12 +41,14 @@ app = FastAPI(
 
 
 @app.get("/attributes")
-async def extract_attributes(sku: str):
+async def extract_attributes(
+    sku: str, api_key: str = Depends(get_api_key)
+) -> ProductAttributes:
     llm = ChatOpenAI(
         model="qwen-turbo",
         temperature=0,
         base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-        api_key=os.getenv("DASHSCOPE_API_KEY"),
+        api_key=api_key,
     )
     prompt = PromptTemplate.from_template(prompt_templates["extractor"])
     extractor = prompt | llm.with_structured_output(ProductAttributes)
