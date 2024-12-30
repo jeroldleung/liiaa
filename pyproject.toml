@@ -13,6 +13,12 @@ dependencies = [
     "python-dotenv>=1.0.1",
 ]
 
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.3.4",
+    "ruff>=0.8.4",
+]
+
 [tool.ruff]
 line-length = 88
 
