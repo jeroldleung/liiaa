@@ -19,4 +19,4 @@ lint:
 		@uv tool run ruff check --fix .
 
 clean:
-		@rm -rf **/__pycache__
+		@find ./app | grep __pycache__ | xargs rm -rf
