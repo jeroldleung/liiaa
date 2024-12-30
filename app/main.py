@@ -27,7 +27,7 @@ def load_prompts():
         if not filename.endswith(".txt"):
             continue
         file_path = os.path.join(PROMPTS_DIR_PATH, filename)
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             prompt = f.read()
         prompt_name = filename[:-4]
         prompt_templates[prompt_name] = prompt
