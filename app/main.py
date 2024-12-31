@@ -1,28 +1,30 @@
 import os
 from contextlib import asynccontextmanager
+from typing import Any
 
 from dotenv import load_dotenv
 from fastapi import Depends, FastAPI
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
+from pydantic import SecretStr
 
 from app.dependencies import get_api_key
 from app.schemas import ProductAttributes
 
-prompt_templates = {}
+prompt_templates: dict[str, str] = {}
 
 PROMPTS_DIR_PATH = "app/prompts"
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI) -> Any:
     load_dotenv()
     load_prompts()
     yield
     prompt_templates.clear()
 
 
-def load_prompts():
+def load_prompts() -> None:
     for filename in os.listdir(PROMPTS_DIR_PATH):
         if not filename.endswith(".txt"):
             continue
@@ -41,18 +43,16 @@ app = FastAPI(
 
 
 @app.get("/attributes")
-async def extract_attributes(
-    sku: str, api_key: str = Depends(get_api_key)
-) -> ProductAttributes:
+async def extract_attributes(sku: str, api_key: str = Depends(get_api_key)) -> Any:
     llm = ChatOpenAI(
         model="qwen-turbo",
         temperature=0,
         base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-        api_key=api_key,
+        api_key=SecretStr(api_key),
     )
     prompt = PromptTemplate.from_template(prompt_templates["extractor"])
     extractor = prompt | llm.with_structured_output(ProductAttributes)
 
-    res = extractor.invoke(sku)
+    res = extractor.invoke({"sku": sku})
 
     return res

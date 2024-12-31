@@ -20,6 +20,7 @@ prod:
 lint:
 		@uv run ruff format .
 		@uv run ruff check --fix .
+		@uv run mypy app tests
 
 clean:
 		@find ./app | grep __pycache__ | xargs rm -rf

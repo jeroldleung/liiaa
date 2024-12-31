@@ -3,7 +3,7 @@ import os
 from fastapi import HTTPException
 
 
-def get_api_key():
+def get_api_key() -> str:
     key = os.getenv("DASHSCOPE_API_KEY")
     if key is None:
         raise HTTPException(
